@@ -141,8 +141,7 @@ if (isfile('myNet1.mat'))
             end
         end
     end
-else
-    warndlg('No training data available');
+else  warndlg('Please en')
 end
 
 

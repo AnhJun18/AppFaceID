@@ -1,11 +1,11 @@
 function Training
     clc
     % get the folder contents
-    d = dir('DataCollect')
+    d = dir('DataCollect');
     % remove all files (isdir property is 0)
-    dfolders = d([d(:).isdir]) 
+    dfolders = d([d(:).isdir]);
     % remove '.' and '..' 
-    dfolders = dfolders(~ismember({dfolders(:).name},{'.','..'}))
+    dfolders = dfolders(~ismember({dfolders(:).name},{'.','..'}));
     sizeDfolders=size(dfolders);
     totalObject=sizeDfolders(1,1);
     clc;
