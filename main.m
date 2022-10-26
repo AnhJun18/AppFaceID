@@ -48,10 +48,13 @@ function collect_Callback(~, eventdata, handles)
 data = inputdlg('Name Object', 'Input name of object ', [1 50]);
 nameObject = data{1};
 isTraining = 'No';
-
-
+ cd('DataCollect')
 if(isempty(nameObject))
     warndlg('Please enter name of object')
+    cd('..');
+elseif exist(string(nameObject), 'dir')
+     warndlg('Name object already exist')
+     cd('..');
 else 
     set(handles.result, 'String','Complete:0%');
     cam = handles.cam;
@@ -64,13 +67,12 @@ else
     handlesArray = [handles.stop, handles.recognition, handles.collect,handles.training, handles.disableWebcam];
     set(handlesArray, 'Enable', 'off');
     faceDetector = vision.CascadeObjectDetector;
-    c=1;
-    cd('DataCollect')
+    c=50;
     status = mkdir(string(nameObject));
     if (status ==1)  
         cd(nameObject);
     else 
-        return ;
+        warndlg('Cannot create fodler!')
     end
     
     temp=0;
