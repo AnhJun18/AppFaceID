@@ -38,6 +38,7 @@ preview(handles.cam, handles.hImage)
 set(handles.enableWebcam, 'Enable', 'off');
 guidata(hObject, handles);
 
+
 function varargout = main_OutputFcn(~, ~, handles) 
 varargout{1} = handles.output;
 
@@ -107,16 +108,30 @@ else
 end
 
 
+% --- Executes on button press in training.
+function training_Callback(~, ~, handles)
+isTraining = questdlg('The training progress may have take some time, do you want to continue ?', 'Question', 'Cancel', 'Continue', 'Cancel');
+if(strcmp(isTraining, 'Continue'))
+    handlesArray = [handles.stop, handles.recognition, handles.collect,handles.training];
+    set(handlesArray, 'Enable', 'off');
+    set(handles.result, 'String', 'Training...', 'foregroundcolor', 'r');
+    pause(1)
+    Training();
+    set(handles.result, 'String', 'Completed', 'foregroundcolor', 'g');
+    set(handlesArray, 'Enable', 'on');
+end
+
+
 % --- Executes on button press in recognition.
 function recognition_Callback(~, eventdata, handles)
 global loopFlag;
 loopFlag = true;
 if (isfile('myNet1.mat'))
+    load myNet1;
+    faceDetector = vision.CascadeObjectDetector;
     %disable buttons
     handlesArray = [handles.stop, handles.recognition, handles.collect,handles.training, handles.enableWebcam, handles.disableWebcam];
     set(handlesArray, 'Enable', 'off');
-    load myNet1;
-    faceDetector = vision.CascadeObjectDetector;
     cam = handles.cam;
     %if cam off, open cam
     if(strcmp(cam, 'null'))
@@ -157,21 +172,6 @@ global loopFlag;
 loopFlag = false;
 
 
-% --- Executes on button press in training.
-function training_Callback(~, ~, handles)
-isTraining = questdlg('The training progress may have take some time, do you want to continue ?', 'Question', 'Cancel', 'Continue', 'Cancel');
-if(strcmp(isTraining, 'Continue'))
-    handlesArray = [handles.stop, handles.recognition, handles.collect,handles.training];
-    set(handlesArray, 'Enable', 'off');
-    set(handles.result, 'String', 'Training...', 'foregroundcolor', 'r');
-    pause(1)
-    Training();
-    set(handles.result, 'String', 'Completed', 'foregroundcolor', 'g');
-    set(handlesArray, 'Enable', 'on');
-end
-
-
-
 % --- Executes on button press in enableWebcam.
 function [cam] = enableWebcam_Callback(hObject, ~, handles)
 handles.cam = webcam;
@@ -183,6 +183,7 @@ preview(handles.cam, handles.hImage)
 set(handles.enableWebcam, 'Enable', 'off');
 set(handles.disableWebcam, 'Enable', 'on');
 guidata(hObject, handles);
+
 
 % --- Executes on button press in disableWebcam.
 function disableWebcam_Callback(hObject, ~, handles)
