@@ -129,12 +129,13 @@ if (isfile('myNet1.mat'))
     handlesArray = [handles.stop, handles.recognition, handles.collect,handles.training, handles.enableWebcam, handles.disableWebcam];
     set(handlesArray, 'Enable', 'off');
     cam = handles.cam;
+    
     %if cam off, open cam
     if(strcmp(cam, 'null'))
        h = findobj('Tag','enableWebcam');
        cam = enableWebcam_Callback(h, eventdata, handles);
     end
-    figure;
+    axes(handles.snapshotResult);
     while true 
         if(loopFlag == false)
             set(handles.result, 'string', '');
@@ -150,6 +151,8 @@ if (isfile('myNet1.mat'))
                 label = classify(myNet1,es);
                 set(handles.result, 'string', char(label), 'foregroundcolor', 'g');
             else 
+                logo = imread('.\assets\Images\offcam.jpg');
+                imshow(logo)
                 set(handles.result, 'string', 'No Found Face', 'foregroundcolor', 'r');
             end
             pause(1)
