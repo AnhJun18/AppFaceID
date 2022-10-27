@@ -110,20 +110,6 @@ else
 end
 
 
-% --- Executes on button press in training.
-function training_Callback(~, ~, handles)
-isTraining = questdlg('The training progress may have take some time, do you want to continue ?', 'Question', 'Cancel', 'Continue', 'Cancel');
-if(strcmp(isTraining, 'Continue'))
-    handlesArray = [handles.stop, handles.recognition, handles.collect,handles.training];
-    set(handlesArray, 'Enable', 'off');
-    set(handles.result, 'String', 'Training...', 'foregroundcolor', 'r');
-    pause(1)
-    Training();
-    set(handles.result, 'String', 'Completed', 'foregroundcolor', 'g');
-    set(handlesArray, 'Enable', 'on');
-end
-
-
 % --- Executes on button press in recognition.
 function recognition_Callback(~, eventdata, handles)
 global loopFlag;
@@ -140,6 +126,7 @@ if (isfile('myNet1.mat'))
         h = findobj('Tag','enableWebcam');
        cam = enableWebcam_Callback(h, eventdata, handles);
     end
+    figure;
     while true 
         if(loopFlag == false)
             set(handles.result, 'string', '');
@@ -151,11 +138,13 @@ if (isfile('myNet1.mat'))
             if(sum(sum(bboxes)) ~= 0)
                 es=imcrop(e, bboxes(1,:));
                 es= imresize(es,[227 227]);
+                imshow(es);
                 label = classify(myNet1,es);
                 set(handles.result, 'string', char(label), 'foregroundcolor', 'g');
             else 
                 set(handles.result, 'string', 'No Found Face', 'foregroundcolor', 'r');
             end
+            pause(2)
         end
     end
 else
@@ -172,6 +161,23 @@ closereq();
 function stop_Callback(~, ~, ~)
 global loopFlag;
 loopFlag = false;
+
+
+% --- Executes on button press in training.
+function training_Callback(~, eventdata, handles)
+isTraining = questdlg('The training progress may have take some time, do you want to continue ?', 'Question', 'Cancel', 'Continue', 'Cancel');
+if(strcmp(isTraining, 'Continue'))
+    h = findobj('Tag','disableWebcam');
+    disableWebcam_Callback(h, eventdata, handles);
+    handlesArray = [handles.stop, handles.recognition, handles.collect,handles.training];
+    set(handlesArray, 'Enable', 'off');
+    set(handles.result, 'String', 'Training...', 'foregroundcolor', 'r');
+    pause(1)
+    Training();
+    set(handles.result, 'String', 'Completed', 'foregroundcolor', 'g');
+    set(handlesArray, 'Enable', 'on');
+end
+
 
 
 % --- Executes on button press in enableWebcam.
