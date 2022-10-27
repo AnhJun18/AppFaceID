@@ -27,6 +27,9 @@ loopFlag = true;
 axes(handles.logo);
 logo = imread('.\assets\Images\logo.png');
 imshow(logo)
+axes(handles.snapshotResult);
+black = imread('.\assets\Images\offcam.jpg');
+imshow(black )
 
 %set webcam
 handles.output = hObject;
@@ -77,6 +80,7 @@ else
     end
     
     temp=0;
+    axes(handles.snapshotResult);
     while true 
         e = cam.snapshot;
         bboxes = step(faceDetector,e);
@@ -93,6 +97,7 @@ else
                 percent = floor(100 / c * 1.0 * temp);
                 message = strcat('Complete: ', num2str(percent), '%');
                 set(handles.result, 'string',message);
+                imshow(es);
                 drawnow;
             end
         else 
@@ -107,6 +112,9 @@ else
     end
     set(handlesArray, 'Enable', 'on');
     set(handles.result, 'String','');
+    axes(handles.snapshotResult);
+    black = imread('.\assets\Images\offcam.jpg');
+    imshow(black)
 end
 
 
@@ -123,7 +131,7 @@ if (isfile('myNet1.mat'))
     cam = handles.cam;
     %if cam off, open cam
     if(strcmp(cam, 'null'))
-        h = findobj('Tag','enableWebcam');
+       h = findobj('Tag','enableWebcam');
        cam = enableWebcam_Callback(h, eventdata, handles);
     end
     figure;
