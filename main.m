@@ -144,7 +144,7 @@ if (isfile('myNet1.mat'))
             else 
                 set(handles.result, 'string', 'No Found Face', 'foregroundcolor', 'r');
             end
-            pause(2)
+            pause(1)
         end
     end
 else
